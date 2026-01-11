@@ -51,9 +51,9 @@ fmt.Println(string(data))
 
 PC8801、PC9801風 VRAMドット転送画像描画・削除ライブラリ
 
-### [rbgimage](https://github.com/BakuretuKen/Ebitengine/tree/main/rbgimage)
+### [rgbimage](https://github.com/BakuretuKen/Ebitengine/tree/main/rgbimage)
 
-[![](./img/rgbimage01.png)](https://github.com/BakuretuKen/Ebitengine/tree/main/rbgimage)<br />
+[![](./img/rgbimage01.png)](https://github.com/BakuretuKen/Ebitengine/tree/main/rgbimage)<br />
 <small>使用画像 © Nihon Falcom Corporation/日本ファルコム</small>
 
 
