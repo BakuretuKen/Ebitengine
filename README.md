@@ -9,7 +9,7 @@
 [![](./img/sprite01.png)](https://github.com/BakuretuKen/Ebitengine/tree/main/sprite)
 
 スプライト作成
-```
+```go
 spriteSheet, err = LoadEbitenImage("assets/icon.png")
 sprite := NewSprite(spriteSheet, 2) // 2は画像のフレーム数（画像は横並び）
 ```
@@ -59,17 +59,11 @@ PC8801、PC9801風 VRAMドット転送画像描画・削除ライブラリ
 
 RGB表示画像生成関数<br />
 reverse=true の場合は、削除処理になります。
-
-```go
-func NewRgbImage(src *ebiten.Image, reverse bool) *RgbImage
-```
+> func NewRgbImage(src *ebiten.Image, reverse bool) *RgbImage
 
 描画開始関数<br />
 waitFrame は、フレーム毎の作画ウエイトを設定します。
-
-```go
-func (r *RgbImage) StartDraw(waitFrame int)
-```
+> func (r *RgbImage) StartDraw(waitFrame int)
 
 ## その他
 
