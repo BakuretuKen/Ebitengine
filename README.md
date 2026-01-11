@@ -53,7 +53,7 @@ PC8801、PC9801でのVRAMドット転送的な画像描画ライブラリ
 
 ### [rbgimage](https://github.com/BakuretuKen/Ebitengine/tree/main/rbgimage)
 
-[![](./img/rgbimage01.png)](https://github.com/BakuretuKen/Ebitengine/tree/main/rbgimage)
+[![](./img/rgbimage01.png)](https://github.com/BakuretuKen/Ebitengine/tree/main/rbgimage)<br />
 <small>使用画像 © Nihon Falcom Corporation/日本ファルコム</small>
 
 ## その他
