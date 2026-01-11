@@ -47,8 +47,17 @@ if err != nil {
 fmt.Println(string(data))
 ```
 
+## 画像RGB描画ライブラリ
+
+PC8801、PC9801でのVRAMドット転送的な画像描画ライブラリ
+
+### [rbgimage](https://github.com/BakuretuKen/Ebitengine/tree/main/rbgimage)
+
+[![](./img/rgbimage01.png)](https://github.com/BakuretuKen/Ebitengine/tree/main/rbgimage)
+<small>使用画像 © Nihon Falcom Corporation/日本ファルコム</small>
+
 ## その他
 
 Ebitengine 公式サイト<br />
-https://ebitengine.org/ja/
+**https://ebitengine.org/ja/**
 
