@@ -49,12 +49,27 @@ fmt.Println(string(data))
 
 ## 画像RGB描画ライブラリ
 
-PC8801、PC9801でのVRAMドット転送的な画像描画ライブラリ
+PC8801、PC9801風 VRAMドット転送画像描画・削除ライブラリ
 
 ### [rbgimage](https://github.com/BakuretuKen/Ebitengine/tree/main/rbgimage)
 
 [![](./img/rgbimage01.png)](https://github.com/BakuretuKen/Ebitengine/tree/main/rbgimage)<br />
 <small>使用画像 © Nihon Falcom Corporation/日本ファルコム</small>
+
+
+RGB表示画像生成関数<br />
+reverse=true の場合は、削除処理になります。
+
+```go
+func NewRgbImage(src *ebiten.Image, reverse bool) *RgbImage
+```
+
+描画開始関数<br />
+waitFrame は、フレーム毎の作画ウエイトを設定します。
+
+```go
+func (r *RgbImage) StartDraw(waitFrame int)
+```
 
 ## その他
 

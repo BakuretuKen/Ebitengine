@@ -52,7 +52,7 @@ func (g *Game) init() {
 		g.inited = true
 	}()
 
-	g.rgbImage = NewRgbImage(sourceImage)
+	g.rgbImage = NewRgbImage(sourceImage, false)
 }
 
 func (g *Game) Update() error {
@@ -62,10 +62,10 @@ func (g *Game) Update() error {
 
 	// 画面クリックで描画開始
 	// if ebiten.IsMouseButtonPressed(ebiten.MouseButtonLeft) {
-	// 	g.rgbImage.StartDraw()
+	// 	g.rgbImage.StartDraw(1)
 	// }
+	g.rgbImage.StartDraw(1)
 
-	g.rgbImage.StartDraw()
 	g.rgbImage.Update()
 	return nil
 }

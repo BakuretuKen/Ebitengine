@@ -39,9 +39,11 @@ type RgbImage struct {
 	stage        rgbStage
 	started      bool
 	done         bool
+	isReverse    bool
+	waitFrame    int
 }
 
-func NewRgbImage(src *ebiten.Image) *RgbImage {
+func NewRgbImage(src *ebiten.Image, reverse bool) *RgbImage {
 	b := src.Bounds()
 	w, h := b.Dx(), b.Dy()
 
@@ -55,16 +57,24 @@ func NewRgbImage(src *ebiten.Image) *RgbImage {
 		stage:   stageB,
 		started: false,
 		done:    false,
+		isReverse: reverse,
 	}
 
 	// 事前生成：実行中に ColorM で毎回作り直す必要はない
 	r.channels[0] = createChannelImage(src, stageB)
 	r.channels[1] = createChannelImage(src, stageGB)
 
+	if r.isReverse {
+		r.buffer = createChannelImage(src, stageRGB)
+	}
+
 	return r
 }
 
-func (r *RgbImage) StartDraw() { r.started = true }
+func (r *RgbImage) StartDraw(waitFrame int) {
+	r.waitFrame = waitFrame
+	r.started = true
+}
 
 func (r *RgbImage) Reset() {
 	r.frameCount = 0
@@ -81,10 +91,9 @@ func (r *RgbImage) Update() {
 	}
 	r.frameCount++
 	// 作画速度設定
-	// if (r.frameCount % 2) == 0 {
-	// 	r.visibleLines++
-	// }
-	r.visibleLines++
+	if (r.frameCount % r.waitFrame) == 0 {
+		r.visibleLines++
+	}
 
 	// stage 遷移（Draw ではなく Update で行う）
 	if r.visibleLines * blockSize >= stageLineLimit {
@@ -104,11 +113,18 @@ func (r *RgbImage) Draw(screen *ebiten.Image) {
 
 	// 完了後は buffer をそのまま出すだけ（状態を固定）
 	if r.done {
-		screen.DrawImage(r.buffer, nil)
+		if !r.isReverse {
+			screen.DrawImage(r.buffer, nil)
+		}
 		return
 	}
 
-	src := r.stageImage(r.stage)
+	var src *ebiten.Image
+	if r.isReverse {
+		src = r.stageImageReverse(r.stage)
+	} else {
+		src = r.stageImage(r.stage)
+	}
 	if src == nil {
 		return
 	}
@@ -151,6 +167,20 @@ func (r *RgbImage) stageImage(s rgbStage) *ebiten.Image {
 		return nil
 	}
 }
+
+func (r *RgbImage) stageImageReverse(s rgbStage) *ebiten.Image {
+	switch s {
+	case stageB:
+		return r.channels[1]
+	case stageGB:
+		return r.channels[0]
+	case stageRGB:
+		return nil
+	default:
+		return nil
+	}
+}
+
 
 // stageB / stageGB のみ新規生成する（stageRGB は src をそのまま使う）
 func createChannelImage(src *ebiten.Image, s rgbStage) *ebiten.Image {
