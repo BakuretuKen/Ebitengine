@@ -80,10 +80,10 @@ func (s *Sprite) Update() {
 		s.vy = -s.vy
 	}
 	s.angle += s.vAngle
-	if s.angle >= maxAngle {
-		s.angle -= maxAngle
+	if s.angle >= 256 {
+		s.angle -= 256
 	} else if s.angle < 0 {
-		s.angle += maxAngle
+		s.angle += 256
 	}
 }
 
@@ -139,7 +139,7 @@ func (s *Sprite) Draw(screen *ebiten.Image) {
 	op := &ebiten.DrawImageOptions{}
 	w, h := float64(s.imageWidth), float64(s.imageHeight)
 	op.GeoM.Translate(-w/2, -h/2)
-	op.GeoM.Rotate(2 * math.Pi * float64(s.angle) / maxAngle)
+	op.GeoM.Rotate(2 * math.Pi * float64(s.angle) / 256)
 	op.GeoM.Translate(w/2, h/2)
 	op.GeoM.Translate(float64(s.x), float64(s.y))
 	screen.DrawImage(s.GetImage(), op)
