@@ -34,11 +34,6 @@ func (s *Images) Update() {
 	s.rgbImage.Update()
 }
 
-const (
-	MinImages = 0
-	MaxImages = 500
-)
-
 type Game struct {
 	debugui debugui.DebugUI
 
@@ -53,6 +48,8 @@ func (g *Game) init() {
 	}()
 
 	g.rgbImage = NewRgbImage(sourceImage, false)
+	g.rgbImage.x = 0
+	g.rgbImage.y = 0
 }
 
 func (g *Game) Update() error {

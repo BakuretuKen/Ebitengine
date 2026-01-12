@@ -11,7 +11,7 @@ import (
 const (
 	stageLineLimit = 84 // visibleLines がここに到達したら次の stage へ
 	copyStep       = 84 // ピクセル作画間隔
-	blockSize      = 2  // 2x2 ブロックで作画
+	rgbBlockSize   = 2  // 2x2 ブロックで作画
 )
 
 type rgbStage int
@@ -26,6 +26,7 @@ const (
 type RgbImage struct {
 	src          *ebiten.Image
 	width, height int
+	x, y          float64 // 描画位置
 
 	// 描画先（蓄積バッファ）
 	buffer *ebiten.Image
@@ -96,7 +97,7 @@ func (r *RgbImage) Update() {
 	}
 
 	// stage 遷移（Draw ではなく Update で行う）
-	if r.visibleLines * blockSize >= stageLineLimit {
+	if r.visibleLines * rgbBlockSize >= stageLineLimit {
 		r.visibleLines = 0
 		r.frameCount = 1 // 次フレームで確実に visibleLines++ が実行されるように奇数にする
 		r.stage++
@@ -114,7 +115,9 @@ func (r *RgbImage) Draw(screen *ebiten.Image) {
 	// 完了後は buffer をそのまま出すだけ（状態を固定）
 	if r.done {
 		if !r.isReverse {
-			screen.DrawImage(r.buffer, nil)
+			op := &ebiten.DrawImageOptions{}
+			op.GeoM.Translate(r.x, r.y)
+			screen.DrawImage(r.src, op)
 		}
 		return
 	}
@@ -139,11 +142,11 @@ func (r *RgbImage) Draw(screen *ebiten.Image) {
 		y := (i / r.width) * 2
 
 		// 2x2 がはみ出すと SubImage が落ちるのでガード
-		if x+blockSize > r.width || y+blockSize > r.height {
+		if x+rgbBlockSize > r.width || y+rgbBlockSize > r.height {
 			continue
 		}
 
-		rect := image.Rect(x, y, x+blockSize, y+blockSize)
+		rect := image.Rect(x, y, x+rgbBlockSize, y+rgbBlockSize)
 		tile := src.SubImage(rect).(*ebiten.Image)
 
 		op.GeoM.Reset()
@@ -152,7 +155,9 @@ func (r *RgbImage) Draw(screen *ebiten.Image) {
 	}
 
 	// 画面描画はフレーム最後に 1 回で十分
-	screen.DrawImage(r.buffer, nil)
+	drawOp := &ebiten.DrawImageOptions{}
+	drawOp.GeoM.Translate(r.x, r.y)
+	screen.DrawImage(r.buffer, drawOp)
 }
 
 func (r *RgbImage) stageImage(s rgbStage) *ebiten.Image {
