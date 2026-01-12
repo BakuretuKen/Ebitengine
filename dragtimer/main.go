@@ -1,5 +1,6 @@
 // 薬飲み忘れタイマー
 // Windowsスタートアップフォルダにプログラムを登録
+
 package main
 
 import (
@@ -113,6 +114,7 @@ func isWaitAppTime() bool {
 func main() {
 	time.Sleep(10 * time.Second)
 
+	// 本日すでに実行しているか？
 	isRun := isRunAppDate()
 	if !isRun {
 		return
@@ -125,10 +127,13 @@ func main() {
 
 	isWait := isWaitAppTime()
 	if !isWait {
-		// 画像を表示
+		// 指定時間以降。画像を表示
 		if err := ebiten.RunGame(&Game{}); err != nil {
 			log.Fatal(err)
 		}
+
+		// 最終実行日を保存
+		writeLastDate()
 	} else {
 		// myTimerHourMinuteになるまで待機
 		now := time.Now()
