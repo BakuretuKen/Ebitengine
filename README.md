@@ -14,6 +14,10 @@ spriteSheet, err = LoadEbitenImage("assets/icon.png")
 sprite := NewSprite(spriteSheet, 2) // 2は画像のフレーム数（画像は横並び）
 ```
 
+当たり判定領域設定（パーセント指定）
+> s := NewSprite(spriteSheet, 3)
+> s.hitArea = 80 // パーセント指定
+
 クリック判定
 > func (s *Sprite) Contains(x, y int) bool
 
