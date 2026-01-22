@@ -60,16 +60,10 @@ func (g *Game) init() {
 
 	g.sprites.sprites = make([]*Sprite, MaxSprites)
 	g.sprites.num = 40
-	fw, fh := FrameSize()
-	if fw == 0 {
-		// 初回呼び出しでフレーム分割
-		NewSprite(spriteSheet, 3)
-		fw, fh = FrameSize()
-	}
 	for i := range g.sprites.sprites {
 		s := NewSprite(spriteSheet, 3)
-		s.x = rand.IntN(screenWidth - fw)
-		s.y = rand.IntN(screenHeight - fh)
+		s.x = rand.IntN(screenWidth - s.imageWidth)
+		s.y = rand.IntN(screenHeight - s.imageHeight)
 		s.vx = 2*rand.IntN(2) - 1
 		s.vy = 2*rand.IntN(2) - 1
 		s.angle = rand.IntN(maxAngle)

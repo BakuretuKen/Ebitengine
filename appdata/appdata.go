@@ -18,14 +18,21 @@ func SetAppDirName(name string) {
 func getUserSaveDir(appName string) (string, error) {
 	// Windows の場合
 	appData := os.Getenv("LOCALAPPDATA")
-	if appData == "" {
-		return "", fmt.Errorf("LOCALAPPDATA not defined")
+	if appData != "" {
+		saveDir := filepath.Join(appData, appName)
+		return saveDir, nil
 	}
-	saveDir := filepath.Join(appData, appName)
-	return saveDir, nil
+	// Macの場合
+	homeDir := os.Getenv("HOME")
+	if homeDir != "" {
+		saveDir := filepath.Join(homeDir, "Library", "Application Support", appName)
+		return saveDir, nil
+	}
+	return "", fmt.Errorf("USER_HOME not defined")
 }
 
-func SaveGameData(filename string, data []byte) error {
+func SaveGameData(filename string, data string) error {
+	dataBytes := []byte(data)
 	dir, err := getUserSaveDir(appDirName)
 	if err != nil {
 		return err
@@ -35,14 +42,18 @@ func SaveGameData(filename string, data []byte) error {
 		return err
 	}
 	path := filepath.Join(dir, filename)
-	return os.WriteFile(path, data, 0644)
+	return os.WriteFile(path, dataBytes, 0644)
 }
 
-func LoadGameData(filename string) ([]byte, error) {
+func LoadGameData(filename string) (string, error) {
 	dir, err := getUserSaveDir(appDirName)
 	if err != nil {
-		return nil, err
+		return "", err
 	}
 	path := filepath.Join(dir, filename)
-	return os.ReadFile(path)
+	dataBytes, err := os.ReadFile(path)
+	if err != nil {
+		return "", err
+	}
+	return string(dataBytes), nil
 }

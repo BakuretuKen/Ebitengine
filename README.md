@@ -23,6 +23,9 @@ sprite := NewSprite(spriteSheet, 2) // 2は画像のフレーム数（画像は�
 他のスプライトとの当たり判定
 > func (s *Sprite) IsHitWith(other *Sprite) bool
 
+画像アニメーション速度設定（アニメフレーム数、ループ有無）
+> func (s *Sprite) SetAnimeSpeed(speed int, loop bool)
+
 ## Windows データ保存ライブラリ
 
 Windows のユーザーデータ保存（AppData）を使ったデータ保存ライブラリ

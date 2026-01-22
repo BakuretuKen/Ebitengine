@@ -9,7 +9,7 @@ import (
 func main() {
 	SetAppDirName("BakuretuKenGame")
 
-	err := SaveGameData("save.json", []byte("Hello Sofmap World"))
+	err := SaveGameData("save.json", "Hello Sofmap World")
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -18,5 +18,5 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println(string(data))
+	fmt.Println(data)
 }

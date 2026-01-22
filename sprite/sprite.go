@@ -18,27 +18,25 @@ type Sprite struct {
 	vx           int
 	vy           int
 	angle        int
-	vAngle      int
+	vAngle       int
 	currentFrame int
-	hitArea     int // パーセントで指定（0-100）
+	hitArea      int  // パーセントで指定（0-100）
+	_frameCount  int  // フレーム数
+	animeSpeed   int  // アニメーション速度
+	isAnimeLoop  bool // アニメーションループフラグ
 }
 
-var (
-	cachedFrames      []*ebiten.Image
-	cachedFrameWidth  int
-	cachedFrameHeight int
-)
-
-// NewSprite はスプライトを生成する（初回呼び出し時にフレーム分割を行う）
+// NewSprite はスプライトを生成する
 func NewSprite(sheet *ebiten.Image, count int) *Sprite {
-	if cachedFrames == nil {
-		cachedFrames, cachedFrameWidth, cachedFrameHeight = splitFrames(sheet, count)
-	}
+	frames, frameWidth, frameHeight := splitFrames(sheet, count)
 	return &Sprite{
-		frames:      cachedFrames,
-		imageWidth:  cachedFrameWidth,
-		imageHeight: cachedFrameHeight,
+		frames:      frames,
+		imageWidth:  frameWidth,
+		imageHeight: frameHeight,
 		hitArea:     100,
+		_frameCount: 0,
+		animeSpeed:  0,
+		isAnimeLoop: true,
 	}
 }
 
@@ -57,12 +55,9 @@ func splitFrames(sheet *ebiten.Image, count int) ([]*ebiten.Image, int, int) {
 	return frames, frameWidth, frameHeight
 }
 
-// FrameSize はキャッシュされたフレームサイズを返す
-func FrameSize() (int, int) {
-	return cachedFrameWidth, cachedFrameHeight
-}
-
 func (s *Sprite) Update() {
+	s._frameCount++
+
 	s.x += s.vx
 	s.y += s.vy
 	if s.x < 0 {
@@ -85,6 +80,24 @@ func (s *Sprite) Update() {
 	} else if s.angle < 0 {
 		s.angle += 256
 	}
+	// アニメーション処理
+	if s.animeSpeed > 0 {
+		frameIndex := s._frameCount / s.animeSpeed
+		if frameIndex >= len(s.frames) {
+			if !s.isAnimeLoop {
+				s.animeSpeed = 0
+				return
+			}
+			// ループする場合の処理
+			frameIndex = frameIndex % len(s.frames)
+		}
+		s.SetFrame(frameIndex)
+	}
+}
+
+func (s *Sprite) SetAnimeSpeed(speed int, loop bool) {
+	s.animeSpeed = speed
+	s.isAnimeLoop = loop
 }
 
 func (s *Sprite) CurrentFrame() int {
