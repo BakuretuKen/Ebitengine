@@ -36,7 +36,7 @@ Windows のユーザーデータ保存（AppData）を使ったデータ保存�
 
 ```go
 SetAppDirName("BakuretuKenGame")
-err := SaveGameData("save.json", []byte("Hello Sofmap World"))
+err := SaveGameData("save.json", "Hello Sofmap World")
 if err != nil {
 	log.Fatal(err)
 }
@@ -50,7 +50,7 @@ data, err := LoadGameData("save.json")
 if err != nil {
 	log.Fatal(err)
 }
-fmt.Println(string(data))
+fmt.Println(data)
 ```
 
 ## 画像RGB描画ライブラリ
